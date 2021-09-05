@@ -5,14 +5,7 @@ import datetime as dt
 
 def hi_fun():
     time = str(dt.date.today())
-    # if display['text'] == time:
-
-    #     print("you dide")
     display.config(text=time, fg='#FFFF30', bg="#5743AB")
-    # elif display['text'] == time:
-
-    #     print("you dide")
-    #     display.config(text=time, fg='#FF0000', bg="#FFFFFF")
 
 
 def hi_fun2():
@@ -28,7 +21,8 @@ def hi_fun2():
 
 
 def hi_fun3():
-    display.config(text=input_date.get(), fg='black')
+    a = float(int(input_date.get())*2.54)
+    display.config(text=str(a), fg='white')
 
 
 win = Tk()
