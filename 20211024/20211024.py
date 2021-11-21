@@ -18,6 +18,7 @@ response = requests.get(send_url)
 info = response.json()
 SITYNAMMMMMMMMMM = []
 AQIII = []
+PM2_5555555 = []
 print(send_url)
 if "fields" in info.keys():
     for i in range(int(limit)):
@@ -30,6 +31,8 @@ if "fields" in info.keys():
             print("Status="+info["records"][i]["Status"]+"\n")
             AQIII.append(info["records"][i]["AQI"])
             SITYNAMMMMMMMMMM.append(info["records"][i]["SiteName"])
-plt.plot(SITYNAMMMMMMMMMM, AQIII, "y-^", label="ARI")
-
+            PM2_5555555.append(info["records"][i]["PM2.5"])
+plt.plot(SITYNAMMMMMMMMMM, AQIII, "y-^%", label="ARI")
+plt.plot(SITYNAMMMMMMMMMM, PM2_5555555, "y-^%", label="ARI")
+plt.legend(loc="upper left")
 plt.show()
