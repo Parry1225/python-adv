@@ -25,7 +25,7 @@ while True:
         pygame.draw.circle(background, (0, 255, 255), (320, 160), 150, 0)
         pygame.draw.circle(background, (230, 0, 255), (230, 130), 40, 0)
         pygame.draw.circle(background, (230, 0, 255), (389, 130), 40, 0)
-        pygame.draw.rect(background, (0, 20, 255), [130, 240, 240, 130], 5)
+        pygame.draw.rect(background, (0, 20, 255), [130, 240, 240, 130], 0)
         pygame.draw.ellipse(background, (0, 20, 255), [260, 130, 60, 400], 5)
         pygame.draw.polygon(background, (50, 20, 255), [
             [200, 100], [130, 60], [0, 200], [100, 76], [78, 51]], 5)
