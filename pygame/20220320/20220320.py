@@ -79,9 +79,10 @@ while True:
 
     if act:
         title = font.render('stop', True, (0, 0, 0))
+        pygame.mixer.music.pause()
 
     else:
-
+        pygame.mixer.music.unpause()
         title = font.render('start', True, (0, 0, 0))
         # pygame.draw.circle(screen, (255, 255, 255),
         #                   (x_site, y_site), randius)
