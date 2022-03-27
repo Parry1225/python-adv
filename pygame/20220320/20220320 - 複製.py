@@ -52,13 +52,13 @@ for i in range(100):
     randius = random.randint(4, 6)
     clock = pygame.time.Clock()
     snow_lint.append([x_site, y_site, x_shift, randius])
-for inin in range(100):
+for inin in range(40):
     x_site2 = random.randint(0, width)
-    y_site2 = random.randint(-100, -1)
+    y_site2 = (x_site2+1)
     x_site3 = (x_site2+1)
-    y_site3 = random.randint(-99, -2)
+    y_site3 = (y_site2+1)
     x_shift2 = random.randint(-1, 1)
-    randius2 = random.randint(4, 8)
+    randius2 = random.randint(4, 6)
     clock2 = pygame.time.Clock()
     rain_lint.append([x_site2, y_site2, x_site3, y_site3, x_shift2, randius2])
 
@@ -94,13 +94,15 @@ while True:
             pygame.draw.rect(screen, (0, 20, 255), [
                              rain[0], rain[1], rain[2], rain[3]], rain[5])
 
-            rain[0] += rain[4]
-            rain[1] += rain[5]
-            rain[2] += rain[4]
-            rain[3] += rain[5]
-            if rain[2] > height or rain[3] > width:
-                rain[1] = random.randrange(-100, -1)
+            # rain[0] += rain[4]
+            rain[1] += 1
+            # rain[2] += rain[4]
+            rain[3] += 1
+            if rain[0] > height or rain[1] > width:
+                rain[1] = rain[0]+1
                 rain[0] = random.randrange(0, width)
+                rain[2] = rain[0]+1
+                rain[3] = rain[0]+1
 
     else:
         pygame.mixer.music.unpause()
