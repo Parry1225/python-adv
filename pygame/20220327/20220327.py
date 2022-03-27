@@ -32,6 +32,12 @@ RED = (255, 0, 0)
 screen = pygame.display.set_mode([width, height])
 pygame.display.set_caption('打地鼠')
 sur = pygame.Surface([width, height])
+mp3_path = 'pygame/20220327/咚2.mp3'
+pygame.mixer.music.load(mp3_path)
+
+mp3_path2 = 'pygame/20220320/snow-dream (1).mp3'
+
+
 gophers = pygame.image.load('pygame/20220327/Gophers150.png')
 pos6 = [[195, 305], [400, 305], [610, 305], [195, 450], [400, 450], [610, 450]]
 tick = 0
@@ -51,6 +57,9 @@ while True:
             mpos = pygame.mouse.get_pos()
             if check_click(mpos, pos[0] - 50, pos[1] - 50, pos[0]+50, pos[1]+50):
                 tick = max_tick+100000
+
+                pygame.mixer.music.play()
+                pygame.mixer.music.fadeout(600000)
                 score += 1
 
     if tick > max_tick:
