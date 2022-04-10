@@ -52,15 +52,15 @@ for i in range(100):
     randius = random.randint(4, 6)
     clock = pygame.time.Clock()
     snow_lint.append([x_site, y_site, x_shift, randius])
-for inin in range(40):
+
+for inin in range(100):
     x_site2 = random.randint(0, width)
-    y_site2 = (x_site2+1)
-    x_site3 = (x_site2+1)
-    y_site3 = (y_site2+1)
+    y_site2 = random.randint(-10, -1)
+    r_length = random.randint(10, 50)
+    r_width = 1
     x_shift2 = random.randint(-1, 1)
-    randius2 = random.randint(4, 6)
-    clock2 = pygame.time.Clock()
-    rain_lint.append([x_site2, y_site2, x_site3, y_site3, x_shift2, randius2])
+    y_shift2 = random.randint(4, 6)
+    rain_lint.append([x_site2, y_site2, r_width, r_length, x_shift2, y_shift2])
 
 while True:
     if speed:
@@ -69,10 +69,16 @@ while True:
         speed_ = font.render('fast', True, (0, 0, 0))
         clock.tick(100)
     else:
-        tit_w2 = speed_.get_width()
-        tit_h2 = speed_.get_height()
-        speed_ = font.render('slow', False, (0, 0, 0))
-        clock.tick(20)
+        if act:
+            tit_w2 = speed_.get_width()
+            tit_h2 = speed_.get_height()
+            speed_ = font.render('slow', False, (0, 0, 0))
+            clock.tick(60)
+        else:
+            tit_w2 = speed_.get_width()
+            tit_h2 = speed_.get_height()
+            speed_ = font.render('slow', False, (0, 0, 0))
+            clock.tick(20)
 
     randius
     mouse_pos = pygame.mouse.get_pos()
@@ -92,23 +98,26 @@ while True:
         pygame.mixer.music.pause()
         for rain in rain_lint:
             pygame.draw.rect(screen, (0, 20, 255), [
-                             rain[0], rain[1], rain[2], rain[3]], rain[5])
+                             rain[0], rain[1], rain[2], rain[3]], 0)
 
             # rain[0] += rain[4]
-            rain[1] += 1
+            rain[0] += rain[4]
             # rain[2] += rain[4]
-            rain[3] += 1
-            if rain[0] > height or rain[1] > width:
-                rain[1] = rain[0]+1
-                rain[0] = random.randrange(0, width)
-                rain[2] = rain[0]+1
-                rain[3] = rain[0]+1
+            rain[1] += rain[5]
+            if rain[1] > height or rain[0] > width:
+                rain[0] = random.randint(0, width)
+                rain[1] = random.randint(-10, -1)
+                rain[3] = random.randint(5, 30)
 
     else:
+        mp3_path = 'pygame/20220320/music.mp3'
+        pygame.mixer.music.load(mp3_path)
+
         pygame.mixer.music.unpause()
         title = font.render('start', True, (0, 0, 0))
         # pygame.draw.circle(screen, (255, 255, 255),
         #                   (x_site, y_site), randius)
+
         for snow in snow_lint:
 
             pygame.draw.circle(screen, (255, 255, 255),
