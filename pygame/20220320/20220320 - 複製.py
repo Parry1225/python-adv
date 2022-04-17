@@ -19,7 +19,7 @@ def check_click(pos, x_min, y_min, x_max, y_max):
 
 
 pygame.init()
-background = pygame.image.load('pygame/20220313/snow.jpg')
+background = pygame.image.load('20220313/snow.jpg')
 width = background.get_width()
 height = background.get_height()
 
@@ -38,7 +38,6 @@ tit_h = title.get_height()
 speed_ = font.render('fast', False, (0, 0, 0))
 tit_w2 = speed_.get_width()
 tit_h2 = speed_.get_height()
-
 
 act = False
 speed = False
@@ -67,18 +66,24 @@ while True:
         tit_w2 = speed_.get_width()
         tit_h2 = speed_.get_height()
         speed_ = font.render('fast', True, (0, 0, 0))
-        clock.tick(100)
+        clock.tick(
+            99999999999999999999999999999999999999999999999999999999999999999999999999999
+        )
     else:
         if act:
             tit_w2 = speed_.get_width()
             tit_h2 = speed_.get_height()
             speed_ = font.render('slow', False, (0, 0, 0))
-            clock.tick(60)
+            clock.tick(
+                99999999999999999999999999999999999999999999999999999999999999999999999999999
+            )
         else:
             tit_w2 = speed_.get_width()
             tit_h2 = speed_.get_height()
             speed_ = font.render('slow', False, (0, 0, 0))
-            clock.tick(20)
+            clock.tick(
+                999999999999999999999999999999999999999999999999999999999999999999999999999
+            )
 
     randius
     mouse_pos = pygame.mouse.get_pos()
@@ -87,18 +92,19 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if check_click(mouse_pos, 0, 0,    tit_w, tit_h):
-                act = not(act)
+            if check_click(mouse_pos, 0, 0, tit_w, tit_h):
+                act = not (act)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if check_click(mouse_pos, 255, 255,    (tit_w2+255), (tit_h2+255)):
-                speed = not(speed)
+            if check_click(mouse_pos, 255, 255, (tit_w2 + 255),
+                           (tit_h2 + 255)):
+                speed = not (speed)
 
     if act:
         title = font.render('stop', True, (0, 0, 0))
         pygame.mixer.music.pause()
         for rain in rain_lint:
-            pygame.draw.rect(screen, (0, 20, 255), [
-                             rain[0], rain[1], rain[2], rain[3]], 0)
+            pygame.draw.rect(screen, (0, 20, 255),
+                             [rain[0], rain[1], rain[2], rain[3]], 0)
 
             # rain[0] += rain[4]
             rain[0] += rain[4]
@@ -120,8 +126,8 @@ while True:
 
         for snow in snow_lint:
 
-            pygame.draw.circle(screen, (255, 255, 255),
-                               (snow[0], snow[1]), snow[3])
+            pygame.draw.circle(screen, (255, 255, 255), (snow[0], snow[1]),
+                               snow[3])
             snow[0] += snow[2]
             snow[1] += snow[3]
             if snow[1] > height or snow[0] > width:

@@ -17,13 +17,12 @@ def check_click(pos, x_min, y_min, x_max, y_max):
 
 
 pygame.init()
-background = pygame.image.load('pygame/20220313/snow.jpg')
+background = pygame.image.load('20220313/snow.jpg')
 width = background.get_width()
 height = background.get_height()
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("minecraft")
-
 
 typeface = pygame.font.get_default_font()
 font = pygame.font.Font(typeface, 35)
@@ -39,7 +38,7 @@ randius = random.randint(4, 6)
 clock = pygame.time.Clock()
 
 while True:
-    clock.tick(20)
+    clock.tick(99)
     randius
     mouse_pos = pygame.mouse.get_pos()
     screen.blit(background, (0, 0))
@@ -47,15 +46,14 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if check_click(mouse_pos, 0, 0,    tit_w, tit_h):
-                act = not(act)
+            if check_click(mouse_pos, 0, 0, tit_w, tit_h):
+                act = not (act)
     if act:
         title = font.render('stop', True, (0, 0, 0))
 
     else:
         title = font.render('start', True, (0, 0, 0))
-        pygame.draw.circle(screen, (255, 255, 255),
-                           (x_site, y_site), randius)
+        pygame.draw.circle(screen, (255, 255, 255), (x_site, y_site), randius)
         x_site += x_shift
         y_site += randius
         if y_site > height or x_site > width:
