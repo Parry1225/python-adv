@@ -93,7 +93,7 @@ def move_dinosaur(win, timer):
         if ds_y >= dino_limit:
             jumpState = False
 
-    win.blit(img_dinosaur[timer % 20 // 10], [ds_x, ds_y])
+    win.blit(dino_show[timer % 20 // 10], [ds_x, ds_y])
 
 
 #***恐龍設定結束***
