@@ -19,7 +19,7 @@ def check_click(pos, x_min, y_min, x_max, y_max):
 
 
 pygame.init()
-background = pygame.image.load('20220313/snow.jpg')
+background = pygame.image.load('snow.jpg')
 width = background.get_width()
 height = background.get_height()
 
