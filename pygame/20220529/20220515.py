@@ -25,8 +25,12 @@ img_sship = [
 img_burn = pygame.image.load('starship_burner.png')
 img_emy_burn = pygame.transform.rotate(img_burn, 180)
 img_weapon = pygame.image.load("bullte.png")
-img_enemy = pygame.image.load("enemy1.png")
-img_enemy2 = pygame.image.load("enemy2.png")
+img_enemy = [
+    pygame.image.load("enemy1.png"),
+    pygame.image.load("enemy2.png"),
+    pygame.image.load("enemy3.png")
+]
+
 #***載入圖片結束***​
 
 #===遊戲視窗設定開始===​
@@ -38,7 +42,7 @@ screen = pygame.display.set_mode(bg_size)
 
 #***遊戲視窗設定結束***
 # mp3_path = 'pygame/20220320/music.mp3'
-mp3_path = 'Mayday五月天【星空】MV官方完整版-電影「星空」主題曲.mp3'
+mp3_path = 'musll.mp3'
 pygame.mixer.music.load(mp3_path)
 pygame.mixer.music.play()
 pygame.mixer.music.fadeout(600000)
@@ -132,68 +136,50 @@ def is_hit(x1, y1, x2, y2, r):
 
 #***飛彈設定結束***​
 #===敵機設定開始===
+ENEMY_MAX = 6
 emy_f = False
 emy_X = 10
 emy_y = bg_y + 10
-emy_wh = img_enemy.get_width() / 2
-emy_hh = img_enemy.get_height() / 2
+emy1 = []
 emy_shift = 5
-emy_dist = int(emy_wh + emy_hh)
+for i in range(ENEMY_MAX):
+
+    emy1.append({
+        "IMG": img_enemy[i % len(img_enemy)],
+        "STATE": emy_f,
+        "X": emy_X,
+        "Y": emy_y,
+        "S": emy_shift
+    })
+
 emy_burn_w, emy_burn_h = img_emy_burn.get_rect().size
 
 
-def move_enemy(win):
-    global emy_f, emy_x, emy_y, score
+def move_enemy(win, emy):
+    global score
+    emy_wh = emy["IMG"].get_width() / 2
+    emy_hh = emy["IMG"].get_height() / 2
+    emy_dist = int(emy_hh + emy_wh)
     if (timer % 60 == 0):
-        if emy_y > bg_y:
-            emy_f = True
-            emy_x = random.randint(emy_wh, bg_x - emy_wh)
-            emy_y = random.randint(emy_hh, emy_hh + 100)
+        if emy["Y"] > bg_y:
+            emy["STATE"] = True
+            emy["X"] = random.randint(int(emy_wh), int(bg_x - emy_wh))
+            emy["Y"] = random.randint(int(emy_hh), int(emy_hh + 100))
 
-    if emy_f == True:
-        emy_y += emy_shift
+    if emy["STATE"] == True:
+        emy["Y"] += emy_shift
         for n in range(MISSILE_MAX):
-            if msl_f[n] == True and is_hit(emy_x, emy_y, msl_x[n], msl_y[n],
-                                           emy_dist):
+            if msl_f[n] == True and is_hit(emy["X"], emy["Y"], msl_x[n],
+                                           msl_y[n], emy_dist):
                 score += 1
                 msl_f[n] = False
-                emy_f = False
-                emy_y = bg_y + 10
-        win.blit(
-            img_emy_burn,
-            [emy_x - emy_burn_w / 2, emy_y - (emy_burn_h + (timer % 3) * 2)])
-        win.blit(img_enemy, [emy_x - emy_wh, emy_y - emy_hh])
-
-
-emy_f2 = False
-emy_x2 = 0
-emy_y2 = bg_y + 10
-emy_wh2 = img_enemy2.get_width() / 2
-emy_hh2 = img_enemy2.get_height() / 2
-emy_shift2 = 5
-emy_dist2 = int(emy_hh2 + emy_wh2)
-
-
-def move_enemy2(win):
-    global emy_f2, emy_x2, emy_y2
-    if (timer % 60 == 0):
-        if emy_y2 > bg_y:
-            emy_f2 = True
-            emy_x2 = random.randint(int(emy_wh2), int(bg_x - emy_wh2))
-            emy_y2 = random.randint(int(emy_hh2), int(emy_hh2 + 100))
-
-    if emy_f2 == True:
-        emy_y2 += emy_shift2
-        for n in range(MISSILE_MAX):
-            if msl_f[n] == True and is_hit(emy_x2, emy_y2, msl_x[n], msl_y[n],
-                                           emy_dist2):
-                msl_f[n] = False
-                emy_f2 = False
-                emy_y2 = bg_y + 10
-        win.blit(
-            img_emy_burn,
-            [emy_x2 - emy_burn_w / 2, emy_y2 - (emy_burn_h + (timer % 3) * 2)])
-        win.blit(img_enemy2, [emy_x2 - emy_wh2, emy_y2 - emy_hh2])
+                emy["STATE"] = False
+                emy["Y"] = bg_y + 10
+        win.blit(img_emy_burn, [
+            emy["X"] - emy_burn_w / 2, emy["Y"] - (emy_burn_h +
+                                                   (timer % 3) * 2)
+        ])
+        win.blit(emy["IMG"], [emy["X"] - emy_wh, emy["Y"] - emy_hh])
 
 
 #***敵機設定結束***
@@ -235,8 +221,9 @@ while True:
     roll_bg(screen)
     move_starship(screen, key, timer)
     move_missilc(screen, key, timer)
-    move_enemy(screen)
-    move_enemy2(screen)
+    for i in range(ENEMY_MAX):
+        move_enemy(screen, emy1[i])
+
     get_score(screen)
     pygame.display.update()
 #===主程式結束===​
