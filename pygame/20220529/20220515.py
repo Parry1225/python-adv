@@ -1,3 +1,4 @@
+from json import load
 import random
 import time
 from turtle import Screen
@@ -30,7 +31,16 @@ img_enemy = [
     pygame.image.load("enemy2.png"),
     pygame.image.load("enemy3.png")
 ]
-
+img_explode = [
+    None,
+    pygame.image.load("explosion1.png"),
+    pygame.image.load("explosion2.png"),
+    pygame.image.load("explosion3.png"),
+    pygame.image.load("explosion4.png"),
+    pygame.image.load("explosion5.png"),
+]
+img_shield = pygame.image.load("shield.png")
+img_gameover = pygame.image.load("gameover.png")
 #***載入圖片結束***​
 
 #===遊戲視窗設定開始===​
@@ -66,10 +76,11 @@ ss_wh = img_sship[0].get_width() / 2
 ss_hh = img_sship[0].get_height() / 2
 burn_w, burn_h = img_burn.get_rect().size
 ss_sur = img_sship[0]
+ss_muteki = 0
 
 
 def move_starship(win, key, timer):
-    global ss_x, ss_y, ss_sur
+    global ss_x, ss_y, ss_sur, ss_muteki
 
     ss_sur = img_sship[0]
     if key[pygame.K_UP]:
@@ -93,8 +104,14 @@ def move_starship(win, key, timer):
         ss_sur = img_sship[2]
         if ss_x > bg_x - ss_wh:
             ss_x = bg_x - ss_wh
-    win.blit(img_burn, [ss_x - burn_w / 2, ss_y + burn_h + (timer % 4) * 3])
-    win.blit(ss_sur, [ss_x - ss_wh, ss_y - ss_hh])
+    if ss_muteki > 0:
+        ss_muteki = ss_muteki - 1
+    else:
+        hit_enemy(emy_info)
+    if ss_muteki % 2 == 0:
+        win.blit(ss_sur, [ss_x - ss_wh, ss_y - ss_hh])
+        win.blit(img_burn,
+                 [ss_x - burn_w / 2, ss_y + burn_h + (timer % 4) * 3])
 
 
 #***我機設定結束***​
@@ -136,20 +153,23 @@ def is_hit(x1, y1, x2, y2, r):
 
 #***飛彈設定結束***​
 #===敵機設定開始===
+
 ENEMY_MAX = 6
 emy_f = False
 emy_X = 10
 emy_y = bg_y + 10
-emy1 = []
 emy_shift = 5
+emy_exp = 0
+emy_info = []
 for i in range(ENEMY_MAX):
 
-    emy1.append({
+    emy_info.append({
         "IMG": img_enemy[i % len(img_enemy)],
         "STATE": emy_f,
         "X": emy_X,
         "Y": emy_y,
-        "S": emy_shift
+        "S": emy_shift,
+        "EXP": emy_exp
     })
 
 emy_burn_w, emy_burn_h = img_emy_burn.get_rect().size
@@ -174,7 +194,7 @@ def move_enemy(win, emy):
                 score += 1
                 msl_f[n] = False
                 emy["STATE"] = False
-                emy["Y"] = bg_y + 10
+                emy["EXP"] = 1
         win.blit(img_emy_burn, [
             emy["X"] - emy_burn_w / 2, emy["Y"] - (emy_burn_h +
                                                    (timer % 3) * 2)
@@ -187,6 +207,18 @@ def move_enemy(win, emy):
 #***碰撞偵測設定結束***
 
 #===爆炸設定開始===
+exp_w, exp_h = img_explode[1].get_rect().size
+
+
+def draw_explode(win, emy):
+    if emy["EXP"] > 0:
+        win.blit(img_explode[emy["EXP"]],
+                 (emy["X"] - exp_w / 2, emy["Y"] - exp_h / 2))
+        emy["EXP"] += 1
+        if emy["EXP"] == 6:
+            emy["Y"] = bg_y + 10
+            emy["EXP"] = 0
+
 
 #***爆炸設定結束***
 score = 0
@@ -200,9 +232,47 @@ def get_score(win):
     win.blit(score_sur, [10, 10])
 
 
+hit = 0
+
+
+def hit_enemy(emy):
+    global hit, ss_x, ss_wh, ss_y, ss_hh, ss_shield, ss_muteki, act
+    for i in range(ENEMY_MAX):
+        if emy[i]["STATE"] == True:
+            w = emy[i]["IMG"].get_width()
+            h = emy[i]["IMG"].get_height()
+            r = int((w + h) / 2)
+            if is_hit(emy[i]["X"] - w / 2, emy[i]["Y"] - h / 2, ss_x - ss_wh,
+                      ss_y - ss_hh, r):
+                ss_shield = ss_shield - 20
+                if ss_shield <= 0:
+                    ss_shield = 0
+                    act = False
+                if ss_muteki == 0:
+                    ss_muteki = 20
+
+
 #===保護罩設定開始===
+ss_shield = 100
+sd_w = img_shield.get_width()
+sd_h = img_shield.get_height()
+
+
+def get_shield(win):
+    win.blit(img_shield, [0, bg_y - 40])
+    pygame.draw.rect(win, (64, 32, 32),
+                     [ss_shield * 4, bg_y - 40, (100 - ss_shield) * 4, sd_h])
+
 
 #***保護罩設定結束***
+act = True
+gg_w = img_gameover.get_width()
+gg_h = img_gameover.get_height()
+
+
+def game_over(win):
+    win.blit(img_gameover, ((bg_x - gg_w) / 2, (bg_y - gg_h) / 2))
+
 
 #==主程式開始===
 while True:
@@ -218,13 +288,18 @@ while True:
                 screen = pygame.display.set_mode(bg_size, FULLSCREEN)
             elif event.key == K_ESCAPE:
                 screen = pygame.display.set_mode(bg_size)
-    roll_bg(screen)
-    move_starship(screen, key, timer)
-    move_missilc(screen, key, timer)
-    for i in range(ENEMY_MAX):
-        move_enemy(screen, emy1[i])
+    if act:
+        roll_bg(screen)
+        move_starship(screen, key, timer)
+        move_missilc(screen, key, timer)
+        for i in range(ENEMY_MAX):
+            move_enemy(screen, emy_info[i])
+            draw_explode(screen, emy_info[i])
+        get_shield(screen)
 
-    get_score(screen)
+        get_score(screen)
+    else:
+        game_over(screen)
     pygame.display.update()
 #===主程式結束===​
 
