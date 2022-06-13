@@ -27,6 +27,7 @@ img_emy_burn = pygame.transform.rotate(img_burn, 180)
 img_weapon = pygame.image.load("bullte.png")
 img_enemy = pygame.image.load("enemy1.png")
 img_enemy2 = pygame.image.load("enemy2.png")
+img_enemy3 = pygame.image.load("enemy_3.png")
 #***載入圖片結束***​
 
 #===遊戲視窗設定開始===​
@@ -42,6 +43,7 @@ mp3_path = 'Mayday五月天【星空】MV官方完整版-電影「星空」主�
 pygame.mixer.music.load(mp3_path)
 pygame.mixer.music.play()
 pygame.mixer.music.fadeout(600000)
+
 #===捲動背景設定開始===
 roll_y = 0
 
@@ -175,7 +177,7 @@ emy_dist2 = int(emy_hh2 + emy_wh2)
 
 
 def move_enemy2(win):
-    global emy_f2, emy_x2, emy_y2
+    global emy_f2, emy_x2, emy_y2, score
     if (timer % 60 == 0):
         if emy_y2 > bg_y:
             emy_f2 = True
@@ -187,6 +189,7 @@ def move_enemy2(win):
         for n in range(MISSILE_MAX):
             if msl_f[n] == True and is_hit(emy_x2, emy_y2, msl_x[n], msl_y[n],
                                            emy_dist2):
+                score += 1
                 msl_f[n] = False
                 emy_f2 = False
                 emy_y2 = bg_y + 10
@@ -194,6 +197,38 @@ def move_enemy2(win):
             img_emy_burn,
             [emy_x2 - emy_burn_w / 2, emy_y2 - (emy_burn_h + (timer % 3) * 2)])
         win.blit(img_enemy2, [emy_x2 - emy_wh2, emy_y2 - emy_hh2])
+
+
+emy_f3 = False
+emy_x3 = 0
+emy_y3 = bg_y + 10
+emy_wh3 = img_enemy2.get_width() / 2
+emy_hh3 = img_enemy2.get_height() / 2
+emy_shift3 = 5
+emy_dist3 = int(emy_hh3 + emy_wh3)
+
+
+def move_enemy3(win):
+    global emy_f3, emy_x3, emy_y3, score
+    if (timer % 60 == 0):
+        if emy_y3 > bg_y:
+            emy_f3 = True
+            emy_x3 = random.randint(int(emy_wh2), int(bg_x - emy_wh2))
+            emy_y3 = random.randint(int(emy_hh2), int(emy_hh2 + 100))
+
+    if emy_f3 == True:
+        emy_y3 += emy_shift3
+        for n in range(MISSILE_MAX):
+            if msl_f[n] == True and is_hit(emy_x3, emy_y3, msl_x[n], msl_y[n],
+                                           emy_dist3):
+                score += 1
+                msl_f[n] = False
+                emy_f3 = False
+                emy_y3 = bg_y + 10
+        win.blit(
+            img_emy_burn,
+            [emy_x3 - emy_burn_w / 2, emy_y3 - (emy_burn_h + (timer % 3) * 2)])
+        win.blit(img_enemy3, [emy_x3 - emy_wh3, emy_y3 - emy_hh3])
 
 
 #***敵機設定結束***
@@ -237,6 +272,7 @@ while True:
     move_missilc(screen, key, timer)
     move_enemy(screen)
     move_enemy2(screen)
+    move_enemy3(screen)
     get_score(screen)
     pygame.display.update()
 #===主程式結束===​
@@ -244,3 +280,5 @@ while True:
 收合
 
 #將訊息傳送給 python-adv-a2
+
+#nope
