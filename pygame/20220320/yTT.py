@@ -5,7 +5,7 @@ import os
 
 os.chdir(sys.path[0])
 
-url = "https://www.youtube.com/watch?v=y56JXm-vgMc"  # 請輸入YT網址
+url = "https://youtu.be/vjIGSNMerlU"  # 請輸入YT網址
 yt = YouTube(url)
 print("We are downloading video...")
 
@@ -13,7 +13,7 @@ video = yt.streams
 result = video.filter(progressive=False, subtype="mp4", res="360p")
 print(result[0])
 
-fname = "mus.mp4"
+fname = "sss.mp4"
 
 result[0].download(filename=fname)
 print("Download finished...")
