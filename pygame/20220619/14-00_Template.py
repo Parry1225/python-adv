@@ -16,6 +16,12 @@ BLOCK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+rainbow1 = 0
+rainbow2 = 0
+rainbow3 = 0
+rainbow1 = random.randint(10, 250)
+rainbow2 = random.randint(10, 250)
+rainbow3 = random.randint(10, 250)
 '''初始化'''
 pygame.init()
 '''FPS'''
@@ -37,7 +43,7 @@ Screen = pygame.display.set_mode(bg_size)
 #***遊戲視窗設定結束***
 
 #===磚塊設定開始===
-TOTAL_BLOCK = 99
+TOTAL_BLOCK = 60
 bricks_list = []
 brick_num = 0
 brick_x = 70
@@ -45,13 +51,21 @@ brick_y = 60
 brick_w = 0
 brick_h = 0
 brick_v = True
+rainbow = (rainbow1, rainbow2, rainbow3)
+
 for i in range(0, TOTAL_BLOCK):
-    if ((i % 11) == 0):
+    if ((i % 10) == 0):
         brick_w = 0
         brick_h += 18
+
+    rainbow = (rainbow1, rainbow2, rainbow3)
+    rainbow1 = rainbow1 + (random.randint(1, 5))
+    rainbow2 = (random.randint(1, 250))
+    rainbow3 = (random.randint(1, 245))
     bricks_list.append(
-        [brick_w + brick_x, brick_h + brick_y, 58, 16, brick_v, BLUE])
-    brick_w += 60
+        [brick_w + brick_x, brick_h + brick_y, 50, 10, brick_v, rainbow])
+
+    brick_w += 70
 
 
 def bricks_update(win):
@@ -112,16 +126,21 @@ ball_x = 400
 ball_y = 300
 ball_radius = 8
 ball_diameter = ball_radius * 2
-ball_color = WHITE
+
+rrainbow1 = (random.randint(1, 250))
+rrainbow2 = (random.randint(1, 250))
+rrainbow3 = (random.randint(1, 245))
+rrainbow = (rainbow1, rainbow2, rainbow3)
+ball_color = rrainbow
 dx = 8
 dy = -8
 
 
 def ball_update(win):
-    global ball_x, ball_y
+    global ball_x, ball_y, rrainbow, rrainbow1, rrainbow2, rrainbow3
     global dx, dy, act
     if (act == False):
-        ball_x = paddle_x + 50
+        ball_x = paddle_x + 55
         ball_y = paddle_y - ball_radius
     else:
         ball_x += dx
@@ -148,13 +167,12 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
         if event.type == pygame.MOUSEMOTION:
-            paddle_x = pygame.mouse.get_pos()[0] - 50
+            paddle_x = pygame.mouse.get_pos()[0] - 55
         if event.type == pygame.MOUSEBUTTONDOWN:
             if (act == False):
                 act = True
 
     Screen.fill(BLOCK)
-
     bricks_update(Screen)
     get_blick_num(Screen)
     ball_update(Screen)
