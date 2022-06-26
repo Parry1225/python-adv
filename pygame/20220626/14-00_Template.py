@@ -1,7 +1,9 @@
 #===載入套件開始===
 #***載入套件結束***
 from re import T
+from socket import gaierror
 from turtle import Screen
+from matplotlib.pyplot import sca
 from numpy import block
 import pygame
 import sys
@@ -16,12 +18,31 @@ BLOCK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
-rainbow1 = random.randint(10, 250)
-rainbow2 = random.randint(10, 250)
-rainbow3 = random.randint(10, 250)
+rainbow1 = random.randint(100, 250)
+rainbow2 = random.randint(100, 250)
+rainbow3 = random.randint(100, 250)
 '''初始化'''
-pygame.init()
+
+game_mode = 1
+
+
+def resetGame():
+    global brick_num, bricks_list, dx, dy, act, rrainbow1, rrainbow2, rrainbow3, bricks, ball_color
+    act = False
+    for bricks in bricks_list:
+        rrainbow1 = (random.randint(100, 250))
+        rrainbow2 = (random.randint(100, 250))
+        rrainbow3 = (random.randint(100, 245))
+        rrainbow = (rainbow1, rainbow2, rainbow3)
+        ball_color = rrainbow
+        bricks[4] = True
+    brick_num = TOTAL_BLOCK
+    dx = 8
+    dy = -8
+
+
 '''FPS'''
+pygame.init()
 clock = pygame.time.Clock()
 '''
 遊戲狀態
@@ -29,6 +50,7 @@ clock = pygame.time.Clock()
 # True:遊戲進行中
 '''
 act = False
+livn = 2
 #***初始化設定結束***
 bg_x = 800
 bg_y = 600
@@ -68,6 +90,17 @@ for i in range(0, TOTAL_BLOCK):
 def bricks_update(win):
     global brick_num, dy
     for bricks in bricks_list:
+        if (is_hit(ball_x, ball_y,
+                   [bricks[0], bricks[1], bricks[2], bricks[3]])):
+            if (bricks[4]):
+                brick_num -= 1
+                if (brick_num <= 0):
+                    resetGame()
+                    break
+                dy = -dy
+            bricks[4] = False
+
+    for bricks in bricks_list:
         if (bricks[4] == True):
             block_rect = [bricks[0], bricks[1], bricks[2], bricks[3]]
             pygame.draw.rect(win, bricks[5], block_rect)
@@ -84,6 +117,12 @@ def get_blick_num(win):
     global brick_num
     sur = number_font.render(str(brick_num), True, RED)
     win.blit(sur, [10, 10])
+
+
+def get_livn(win):
+    global livn
+    sur = number_font.render(str(livn), True, RED)
+    win.blit(sur, [10, 200])
 
 
 #===顯示磚塊數量設定結束===
@@ -124,9 +163,9 @@ ball_y = 300
 ball_radius = 8
 ball_diameter = ball_radius * 2
 
-rrainbow1 = (random.randint(1, 250))
-rrainbow2 = (random.randint(1, 250))
-rrainbow3 = (random.randint(1, 245))
+rrainbow1 = (random.randint(100, 250))
+rrainbow2 = (random.randint(100, 250))
+rrainbow3 = (random.randint(100, 245))
 rrainbow = (rainbow1, rainbow2, rainbow3)
 ball_color = rrainbow
 dx = 8
@@ -134,7 +173,7 @@ dy = -8
 
 
 def ball_update(win):
-    global ball_x, ball_y, rrainbow, rrainbow1, rrainbow2, rrainbow3
+    global ball_x, ball_y, rrainbow, rrainbow1, rrainbow2, rrainbow3, livn, game_mode
     global dx, dy, act
     if (act == False):
         ball_x = paddle_x + 55
@@ -143,7 +182,10 @@ def ball_update(win):
         ball_x += dx
         ball_y += dy
         if (ball_y > bg_y - ball_diameter):
+            livn -= 1
             act = False
+            if (livn < 0):
+                game_mode = 0
         if (ball_x > bg_x - ball_diameter or ball_x < ball_diameter):
             dx = -dx
         if (ball_y > bg_y - ball_diameter or ball_y < ball_diameter):
@@ -154,10 +196,21 @@ def ball_update(win):
 #===球設定結束===
 
 #===初始遊戲設定開始===
-#===初始遊戲設定結束===
+img_gg = pygame.image.load('gameover.png')
+gg_w = img_gg.get_width()
+gg_h = img_gg.get_height()
 
+
+def game_over(win):
+    global livn
+    win.blit(img_gg, ((bg_x - gg_w) / 2, (bg_y - gg_h) / 2))
+
+
+#===初始遊戲設定結束===
+resetGame()
 #-------------------------------------------------------------------------
 # 主迴圈.
+
 #-------------------------------------------------------------------------
 while True:
     for event in pygame.event.get():
@@ -168,11 +221,21 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if (act == False):
                 act = True
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                resetGame()
+                game_mode = 1
+                livn = 3
+    if (game_mode):
+        Screen.fill(BLOCK)
+        bricks_update(Screen)
+        get_blick_num(Screen)
+        ball_update(Screen)
+        paddle_update(Screen)
+        get_livn(Screen)
 
-    Screen.fill(BLOCK)
-    bricks_update(Screen)
-    get_blick_num(Screen)
-    ball_update(Screen)
-    paddle_update(Screen)
+    else:
+        game_over(Screen)
+
     pygame.display.update()
     clock.tick(60)
