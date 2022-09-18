@@ -38,7 +38,6 @@ screen = pygame.display.set_mode([width, height])
 pygame.display.set_caption('打地鼠')
 sur = pygame.Surface([width, height])
 
-
 gophers = pygame.image.load('Gophers150.png')
 gophers2 = pygame.image.load('Gophers2_150.png')
 pos6 = [[195, 305], [400, 305], [610, 305], [195, 450], [400, 450], [610, 450]]
@@ -58,6 +57,8 @@ pygame.mouse.set_visible(False)
 ham1 = pygame.image.load('Hammer1.png')
 ham2 = pygame.image.load('Hammer2.png')
 hitsur = gophers
+pygame.mixer.music.load('hit.mp3')
+
 while True:
     hitsur = gophers
     clock.tick(30)
@@ -68,10 +69,11 @@ while True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             hammer = ham1
             mpos = pygame.mouse.get_pos()
-            if check_click(mpos, pos[0] - 50, pos[1] - 50, pos[0]+50, pos[1]+50):
+            if check_click(mpos, pos[0] - 50, pos[1] - 50, pos[0] + 50,
+                           pos[1] + 50):
 
                 if times < time_max:
-                    tick = max_tick+100000
+                    tick = max_tick + 100000
                     score += 1
                     hitsur = gophers2
 
@@ -87,7 +89,7 @@ while True:
         pygame.display.flip()
     else:
         if tick > max_tick:
-            times = times+1
+            times = times + 1
             screen.blit(background, (0, 0))
             score_sur = score_font.render(str(score), True, [255, 0, 0])
             end_sur = score_font.render(str(score), True, [255, 0, 0])
@@ -98,10 +100,10 @@ while True:
             tick += 1
         sur.blit(background, (0, 0))
 
-        sur.blit(hitsur, (pos[0] - hitsur.get_width() /
-                          2, pos[1] - hitsur.get_height()/2))
-        sur.blit(hammer, (mpos[0] - hammer.get_width() /
-                          2, mpos[1] - hammer.get_height()/2))
+        sur.blit(hitsur, (pos[0] - hitsur.get_width() / 2,
+                          pos[1] - hitsur.get_height() / 2))
+        sur.blit(hammer, (mpos[0] - hammer.get_width() / 2,
+                          mpos[1] - hammer.get_height() / 2))
 
         # pygame.draw.circle(sur, [0, 255, 0], mpos, 10)
         screen.blit(sur, (0, 0))
