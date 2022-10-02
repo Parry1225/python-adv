@@ -1,5 +1,5 @@
 from machine import I2C, Pin
-from esp8266_i2c_lcd import I2cLcd
+from common.esp8266_i2c_lcd import I2cLcd
 
 f = 1000
 d = 0
