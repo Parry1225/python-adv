@@ -27,9 +27,9 @@ class mcu_fun:
             RED = Pin(r_gpio, Pin.OUT)
             GREEN = Pin(g_gpio, Pin.OUT)
             BLUE = Pin(b_gpio, Pin.OUT)
-            RED2 = RED.value(0)
-            RED2 = RED.value(0)
-            RED2 = RED.value(0)
+            RED = RED.value(0)
+            GREEN = GREEN.value(0)
+            BLUE = BLUE.value(0)
         else:
             f = 1000
             d = 0
@@ -44,7 +44,7 @@ class mcu_fun:
 
         return lcd
 
-    def mqtt_subscribe(self, mq_id_input: str):
+    def mqtt_subscribe(self, mq_id_input: str, on_massage=None):
         mq_sever = "singularmakers.asuscomm.com"
         mq_id = mq_id_input
         mq_user = "singular"
@@ -61,10 +61,17 @@ class mcu_fun:
             exit()
         finally:
             print("OMG!!!")
-
-    def mqtt_get_msg(self, on_massage, topic_input: str):
         self.mqClient0.set_callback(on_massage)
+
+    def mqtt_get_msg(self, topic_input: str):
         self.mqClient0.subscribe(topic_input)
+        self.mqClient0.check_msg()
+        self.mqClient0.ping()
+
+    def mqtt_put_msg(self, topic_input: str, msg: str):
+        topic_input = topic_input.encode('utf-8')
+        msg = msg.encode('utf-8')
+        self.mqClient0.publish(topic_input, msg)
 
 
 class gpio:

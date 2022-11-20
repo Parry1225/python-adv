@@ -16,8 +16,6 @@ RED, BLUE, GREEN = wlan.led_initial(r_gpio=gpio.D5,
                                     g_gpio=gpio.D6,
                                     b_gpio=gpio.D7)
 
-wlan.mqtt_subscribe(mq_id_input='Fake_Singular')
-
 
 def on_massage(topic, msg):
     msg = msg.decode("utf-8")
@@ -38,9 +36,8 @@ def on_massage(topic, msg):
         BLUE.value(0)
 
 
-wlan.mqtt_get_msg(on_massage=on_massage, topic_input="Fake_Singular")
+wlan.mqtt_subscribe(mq_id_input='Fake_Singular', on_massage=on_massage)
 
 while True:
-    wlan.mqClient0.check_msg()
-    wlan.mqClient0.ping()
+    wlan.mqtt_get_msg(topic_input="Fake_Singular")
     time.sleep(0.3)
