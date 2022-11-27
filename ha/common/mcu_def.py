@@ -75,7 +75,7 @@ class mcu_fun:
 
 
 class gpio:
-    D1 = 16
+    D0 = 16
     D1 = 5
     D2 = 4
     D3 = 0
