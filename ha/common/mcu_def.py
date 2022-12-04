@@ -27,9 +27,9 @@ class mcu_fun:
             RED = Pin(r_gpio, Pin.OUT)
             GREEN = Pin(g_gpio, Pin.OUT)
             BLUE = Pin(b_gpio, Pin.OUT)
-            RED = RED.value(0)
-            GREEN = GREEN.value(0)
-            BLUE = BLUE.value(0)
+            RED.value(0)
+            GREEN.value(0)
+            BLUE.value(0)
         else:
             f = 1000
             d = 0
@@ -72,6 +72,10 @@ class mcu_fun:
         topic_input = topic_input.encode('utf-8')
         msg = msg.encode('utf-8')
         self.mqClient0.publish(topic_input, msg)
+
+    def servo_angle(self, sg, angle):
+        if 0 <= angle <= 180:
+            sg.duty(int(1023 * (0.5 + angle / 90) / 20))
 
 
 class gpio:
